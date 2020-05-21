@@ -1,5 +1,38 @@
 <?php
 
+$rijec = $_POST['text'];
+
+$broj = strlen($rijec); 
+
+function samoglasnici($rijec){
+    $counter = strlen($rijec);
+    $samoglasnici = 0;
+
+    for ($i=0; $i<$counter; $i++){
+        if(($rijec[$i]=='a')||($rijec[$i]=='e')||($rijec[$i]=='i')||($rijec[$i]=='o')||($rijec[$i]=='u'))
+        $samoglasnici++;
+    }
+    return $samoglasnici;
+}
+
+$samoglasnici = samoglasnici ($rijec);
+
+/*function suglasnici($rijec){
+    $counter = strlen($rijec);
+    $suglasnici = 0;
+
+    for ($i=0; $i<$counter; $i++){
+        if(!($rijec[$i]=='a')||!($rijec[$i]=='e')||!($rijec[$i]=='i')||!($rijec[$i]=='o')||!($rijec[$i]=='u'))
+        $suglasnici++;
+    }
+    return $suglasnici;
+}*/
+
+$suglasnici = $broj - $samoglasnici;
+
+/*$testJson = file_get_contents ('test.json');
+$test = json_decode ($testJson, true);*/
+
 ?>
 
 <!DOCTYPE html>
@@ -12,33 +45,12 @@
 <body>
 <p>Upišite riječ:</p>
 <form action="ispit.php" method="post">
-<input type="text" name="tekst"><br>
+<input type="text" name="text"><br>
 <input type="submit" value="Pošalji"/>
 </form>
 
 <br>
 <br>
-
-<?php
-$rijec = $_POST ['text'];
-
-$testJson = file_get_contents ('test.json');
-$test = json_decode ($testJson, true);
-
-$broj = strlen($rijec);
-/*function samoglasnici ($str) {
-    $broj = strlen ($str);
-    $samoglasnici = 0;
-
-    for ($i=0; i<$broj;$i++) {
-        if (($str[$i]=='a')||($str[$i]=='e')||($str[$i]=='i')||($str[$i]=='o')||($str[$i]=='u')) {
-            //echo $str [i];
-            $samoglasnici++;
-        }
-    }
-}
-$samoglasnici = samoglasnici();*/
-?>
 
 <table border=2>
 
@@ -48,27 +60,47 @@ $samoglasnici = samoglasnici();*/
     <th>Broj suglasnika</th>
     <th>Broj samoglasnika</th>
 </tr>
-<tr>
-    <td><?php echo ($test); ?></td>
-    <td><?php echo ($broj); ?> </td>
-    <td></td>
-    <td></td>
-</tr>
+<!--<tr>
+    <td><?//php echo ($test[0]); ?></td>
+    <td><?//php echo ($broj = $test[0]); ?> </td>
+    <td><?//php echo ($suglasnici= $test[0]); ?></td>
+    <td><?//php echo ($samoglasnici= $test[0]);*/ ?></td>
+</tr>-->
 <?php
 if ($rijec = !empty($_POST)){
     echo "<tr>";
     echo "<td>"; 
-    echo ($_POST["tekst"]);
+    echo $_POST['text'];
     echo "</td>";
-    echo "<td> $broj </td>";
-    echo "<td>Broj suglasnika</td>";
-    echo "<td> broj </td>";
+    echo "<td>";
+    echo $broj;
+    echo "</td>";
+    echo "<td>";
+    echo $suglasnici;
+    echo "</td>";
+    echo "<td>";
+    echo $samoglasnici;
+    echo "</td>";
     echo "</tr>";
 } else {
     return "Upišite riječ!";
 }
 ?>
 </table>
-
 </body>
 </html>
+
+<?php
+
+$upis = [
+    'Riječ' => $rijec,
+    'Broj slova' => $broj,
+    'Broj suglasnika' => $suglasnici,
+    'Broj samoglasnika' => $samoglasnici
+];
+
+$podaci [] = $upis;
+$podaciJson = json_encode($podaci);
+$kraj = file_put_contents(__DIR__,'/test.json', $podaciJson);
+
+?>
